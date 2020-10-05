@@ -94,6 +94,30 @@ impl Default for Memory {
     }
 }
 
+#[cfg(feature = "signedmagnitude_sub")]
+fn sm_to_tc(v: u8) -> u8 {
+    if v>=128 {
+       // ones complement
+       let ones = v ^ 0b0111_1111;
+       // two's
+       ones.wrapping_add(1)
+    } else {
+       v
+    }
+}
+#[cfg(feature = "signedmagnitude_sub")]
+fn tc_to_sm(v: u8) -> u8 {
+    if v>=128 {
+       // ones complement
+       let ones = v.wrapping_sub(1);
+       // two's
+       ones ^ 0b0111_1111
+    } else {
+       v
+    }
+}
+
+
 #[derive(Clone, Default)]
 pub struct Ssbc {
     memory: Memory,
@@ -195,6 +219,23 @@ impl Ssbc {
                 self.sp += 1.into();
             },
             // sub
+            #[cfg(feature = "signedmagnitude_sub")]
+            9 => {
+                let lhs = self.memory.get(self.sp+1.into());
+                let rhs = self.memory.get(self.sp+2.into());
+                // convert from signed magnitude to two's complement
+                let lhs = sm_to_tc(lhs);
+                let rhs = sm_to_tc(rhs);
+                // subtract
+                let result = lhs.wrapping_sub(rhs);
+                // convert from two's complement to signed magnitude
+                let result = tc_to_sm(result);
+                // store
+                self.memory.set(self.sp+2.into(), result);
+                self.update_psw(result);
+                self.sp += 1.into();
+            },
+            #[cfg(not(feature = "signedmagnitude_sub"))]
             9 => {
                 let result = self.memory.get(self.sp+1.into()).wrapping_sub(self.memory.get(self.sp+2.into()));
                 self.memory.set(self.sp+2.into(), result);

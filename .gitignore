@@ -1,3 +1,7 @@
 /target
 # SSBC Machine code file
 mac
+# patched version of src/main.rs, for use on otter.
+/ssbc.rs
+# and otter output binary
+/ssbc

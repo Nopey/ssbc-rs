@@ -5,7 +5,8 @@ For more information on the SSBC, see [Peter Walsh's Computer Architecture cours
 or [a past student's online interpreter written in JavaScript](https://babakanoosh.github.io/Visual-SSBC/index.html).
 
 ## Differences
-the `sub` instruction uses two's complement arithmetic rather than signed magnitude. I'm attempting to upstream this.
+The SSBC has a different subtract instruction, depending on whether you're in CSCI 261 or CSCI 355,
+See the Signed Mode section of this document for instructions on how to set the mode.
 
 Telling ssbc.pl to run without first resetting enters an infinite loop, with no side affects.
 Telling ssbc-rs to run without first resetting begins interpreting, which will likely NOP, unless there's been something written to ports B or D
@@ -15,10 +16,13 @@ Situations where multiple reads and/or writes are happening to the same location
 Register overflow (stack pointer, program counter) wrap, whereas ssbc.pl likely crashes with an array index out of bounds error (untested).
 
 ## Compiling
-On otter, run `rustc --edition 2018 ssbc.rs`.
+On otter, run `./build.sh`
 Elsewhere, I recommend using cargo: `cargo build`
 
-Note that the ssbc.rs file in the root may be slightly out of date with the authoritive src/main.rs file.
+### Signed Mode
+When building on otter, pass `--cfg 'feature="signedmagnitude_sub"'` to build.sh if you'd like to match the CSCI 261 SSBC's behavior.
+If you're elsewhere, you can pass `--features=signedmagnitude_sub` to cargo build to build with that feature.
+
 
 ## Usage
 Use the ssbc-rs binary as you would `ssbc.pl`.
