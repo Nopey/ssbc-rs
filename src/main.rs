@@ -59,8 +59,14 @@ impl Port {
     }
 }
 
-/// The status word's address, 0xFFFB. It is one of: 0x80 (Z), 0x40(N), or 0x00
+/// The status word's address, 0xFFFB. It is set to one of FLAG_{N,Z,NONE}
 pub const PSW: Addr = Addr::from_u16(0xFFFB);
+/// When no flag is set. 0x00
+pub const FLAG_NONE: u8 = 0x00;
+/// Negative flag. 0x40
+pub const FLAG_N: u8 = 0x40;
+/// Zero flag. 0x80
+pub const FLAG_Z: u8 = 0x80;
 /// The length of the SSBC's memory.
 const MEMORY_LENGTH: usize = u16::MAX as usize + 1;
 
@@ -130,7 +136,7 @@ impl Ssbc {
     fn update_psw(&mut self, val: u8) {
         self.memory.set(
             PSW,
-            if val>128{ 0x40 }else if val==0 { 0x80 } else { 0x00 }
+            if val>128{ FLAG_N } else if val==0 { FLAG_Z } else { FLAG_NONE }
         );
     }
     /// Steps by a single instruction
@@ -170,14 +176,14 @@ impl Ssbc {
             // jnz
             6 => {
                 let ext = self.read_ext();
-                if self.memory.get(PSW) != 0x80 {
+                if self.memory.get(PSW) != FLAG_Z {
                     self.pc = ext.into();
                 }
             },
             // jnn
             7 => {
                 let ext = self.read_ext();
-                if self.memory.get(PSW) != 0x40 {
+                if self.memory.get(PSW) != FLAG_N {
                     self.pc = ext.into();
                 }
             },
