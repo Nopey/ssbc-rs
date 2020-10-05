@@ -279,16 +279,11 @@ impl SsbcCli {
     }
     fn read_port(&self, port: Port) {
         let value = self.ssbc.memory.get(port.to_addr());
-        if value==0 {
-            // weird perl interpreter thing where it
-            //     prints blank instead of zero.
-            println!("Port {:?} value:  ", port);
-        } else {
-            println!("Port {:?} value: {:08b} ", port, value);
-        }
+        println!("Port {:?} value: {:08b} ", port, value);
     }
     fn write_port(&mut self, port: Port) {
-        print!("Enter Port D value in binary (8 bits) ");
+        print!("Enter Port {:?} value in binary (8 bits) ", port);
+        std::io::stdout().flush().expect("couldn't flush stdout");
         let mut buffer = String::new();
         std::io::stdin().read_line(&mut buffer).expect("Couldn't read value for port");
         buffer.pop();
@@ -300,10 +295,10 @@ impl SsbcCli {
         println!(" Halt: {} ", if self.ssbc.halt {1}else{0} );
     }
     fn top(&self) {
-        println!("Top of stack: {:08b}", self.ssbc.memory.get(self.ssbc.sp+1.into()));
+        println!("Top of stack: {:08b} ", self.ssbc.memory.get(self.ssbc.sp+1.into()));
     }
     fn psw(&self) {
-        println!("PSW: {:08b}", self.ssbc.get_psw());
+        println!("PSW: {:08b} ", self.ssbc.get_psw());
     }
 }
 
