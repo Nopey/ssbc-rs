@@ -20,8 +20,11 @@ On otter, run `./build.sh`
 Elsewhere, I recommend using cargo: `cargo build`
 
 ### Signed Mode
-When building on otter, pass `--cfg 'feature="signedmagnitude_sub"'` to build.sh if you'd like to match the CSCI 261 SSBC's behavior.
-If you're elsewhere, you can pass `--features=signedmagnitude_sub` to cargo build to build with that feature.
+By default, ssbc-rs uses two's complement subtraction, as the CSCI 355 SSBC does.
+
+If you'd like to match the 261 SSBC's behaviour,
+pass `--cfg 'feature="signedmagnitude_sub"'` to build.sh when building on otter
+or pass `--features=signedmagnitude_sub` when you're elsewhere.
 
 
 ## Usage
