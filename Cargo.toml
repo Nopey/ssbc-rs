@@ -3,6 +3,13 @@ name = "ssbc"
 version = "0.1.0"
 authors = ["Magnus Larsen <golgothasTerror101@gmail.com>"]
 edition = "2018"
+description = "An SSBC Interpreter written in Rust. See http://csci.viu.ca/~pwalsh/teaching/261/261/261.html"
+documentation = "https://docs.rs/ssbc"
+readme = "README.md"
+repository = "https://github.com/Nopey/ssbc-rs"
+license = "MIT OR Apache-2.0"
+keywords = ["interpreter", "toy", "language", "asm", "assembly"]
+categories = ["command-line-utilities", "development-tools::debugging", "emulators"]
 
 [dependencies]
 derive_more = "0.99.11"
